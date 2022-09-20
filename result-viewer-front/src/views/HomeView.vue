@@ -1,18 +1,36 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container>
+    <UploadFile />
+    <v-row justify="center">
+      <v-btn class="ma-2" color="indigo" dark @click="process_files">
+        PROCESS FILES
+        <v-icon dark right>mdi-cloud-upload</v-icon>
+      </v-btn>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import UploadFile from "@/components/UploadFile.vue";
+import EventBus from "../utils/bus";
+import router from "@/router";
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
+
   components: {
-    HelloWorld
-  }
-}
+    UploadFile,
+  },
+
+  data() {
+    return {};
+  },
+
+  methods: {
+    process_files() {
+      EventBus.$emit("process_csv");
+      router.push("datatable");
+    },
+  },
+};
 </script>
