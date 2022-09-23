@@ -14,11 +14,11 @@ export default new Vuex.Store({
 
   mutations: {
     update_csv(state, file) {
-      state.update_csv = file;
+      state.archive_csv = file;
       // console.log(this.state.update_csv)
     },
     update_txt(state, file) {
-      state.update_txt = file;
+      state.archive_txt = file;
       // console.log(this.state.update_txt)
     }
   },
