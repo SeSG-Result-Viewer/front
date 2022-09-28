@@ -1,33 +1,29 @@
 <template>
-  <v-container>
-    <v-row justify="center" class="mb-2">
-      <h1>Upload your files</h1>
-    </v-row>
+  <div>
+    <v-file-input
+      label="Click here to select a .csv file"
+      accept=".csv"
+      outlined
+      chips
+      show-size
+      rounded
+      prepend-icon=""
+      v-model="file_csv"
+      :rules="rules"
+    />
 
-    <v-col id="widthUploadFiles">
-      <v-file-input
-        label="Click here to select a .csv file"
-        accept=".csv"
-        outlined
-        chips
-        show-size
-        rounded
-        prepend-icon=""
-        @change="file_csv"
-      />
-
-      <v-file-input
-        label="Click here to select a .txt file"
-        accept=".txt"
-        outlined
-        chips
-        show-size
-        rounded
-        prepend-icon=""
-        @change="file_txt"
-      />
-    </v-col>
-  </v-container>
+    <v-file-input
+      label="Click here to select a .txt file"
+      accept=".txt"
+      outlined
+      chips
+      show-size
+      rounded
+      prepend-icon=""
+      v-model="file_txt"
+      :rules="rules"
+    />
+  </div>
 </template>
 
 <script>
@@ -35,13 +31,24 @@ export default {
   name: "UploadFile",
 
   data() {
-    return {};
+    return {
+      file_txt: null,
+      file_csv: null,
+      rules: [
+        (value) =>
+          !value ||
+          value.size <= 800000 ||
+          "File size should be less than 800 KB!",
+      ],
+    };
   },
 
-  methods: {
+  watch: {
     file_csv(f) {
       if (f) {
         f.text().then((file) => {
+          const csv_name = f.name;
+          this.$store.commit("update_csv_name", csv_name);
           this.$store.commit("update_csv", file);
         });
       }
@@ -50,6 +57,8 @@ export default {
     file_txt(f) {
       if (f) {
         f.text().then((file) => {
+          const txt_name = f.name;
+          this.$store.commit("update_txt_name", txt_name);
           this.$store.commit("update_txt", file);
         });
       }
@@ -58,9 +67,4 @@ export default {
 };
 </script>
 
-<style scoped>
-#widthUploadFiles {
-  margin: auto;
-  width: 310px;
-}
-</style>
+<style scoped></style>
