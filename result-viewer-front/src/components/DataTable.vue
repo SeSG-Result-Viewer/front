@@ -1,18 +1,21 @@
 <template>
-  <v-card min-width="650px" width="800px" class="mt-3">
-    <v-row class="ml-3">
-      <h1>{{ filename }}</h1>
-    </v-row>
-    <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        clearable
-        label="Search..."
-        single-line
-        hide-details
-        @input="loading = true"
-      />
+  <v-card width="850px" height="540px" class="mt-5">
+    <v-card-title class="mt-n5">
+      <v-col>
+        <h2 class="mt-n4">{{ filename }}</h2>
+      </v-col>
+      <v-col>
+        <v-text-field
+          class="mt-n8"
+          v-model="search"
+          append-icon="mdi-magnify"
+          clearable
+          label="Search..."
+          single-line
+          hide-details
+          @input="loading = true"
+        />
+      </v-col>
     </v-card-title>
 
     <v-data-table
@@ -22,7 +25,7 @@
       hide-default-footer
       :items-per-page="480"
       fixed-header
-      height="420px"
+      height="450px"
       dense
       multi-sort
       hover
@@ -43,29 +46,23 @@ export default {
       search: "",
       headers: [],
       items: [],
-      errors: [],
     };
   },
   methods: {
     process_csv() {
       try {
-        this.items = this.headers = this.errors = [];
+        this.items = this.headers = [];
         const archive_csv = this.$store.state.archive_csv;
-        this.filename = this.$store.state.archive_csv_name;
+        const teste = this.$store.state.archive_csv_name;
+        this.filename = teste;
         Papa.parse(archive_csv, {
           header: true,
           delimiter: ",",
           skipEmptyLines: true,
           complete: (json) => {
-            if (json.errors.length == 0) {
-              this.items = json.data;
-              // console.log(this.items);
-              this.process_headers(json.meta.fields);
-            } else {
-              console.log(json.errors);
-              this.errors = json.errors;
-              EventBus.$emit("processed_csv");
-            }
+            this.items = json.data;
+            this.process_headers(json.meta.fields);
+            EventBus.$emit("processed_csv");
           },
         });
       } catch (error) {
@@ -82,7 +79,6 @@ export default {
             value: header,
           });
         });
-        // console.log(this.headers);
         EventBus.$emit("processed_csv");
       } catch (error) {
         EventBus.$emit("processed_csv");
