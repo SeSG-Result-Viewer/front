@@ -1,36 +1,38 @@
 <template>
-  <v-card width="850px" height="540px" class="mt-5">
-    <v-card-title class="mt-n5">
-      <v-col>
-        <h2 class="mt-n4">{{ filename }}</h2>
-      </v-col>
-      <v-col>
-        <v-text-field
-          class="mt-n8"
-          v-model="search"
-          append-icon="mdi-magnify"
-          clearable
-          label="Search..."
-          single-line
-          hide-details
-          @input="loading = true"
-        />
-      </v-col>
-    </v-card-title>
+  <v-container>
+    <v-row class="ma-auto" justify="end" v-if="buttons">
+      <v-btn text color="indigo">Calculate Metrics</v-btn>
+      <v-btn text color="indigo">Export</v-btn>
+    </v-row>
+    <v-card class="mt-2">
+      <v-card-title align="start">
+        <v-col>
+          <h2>{{ filename }}</h2>
+        </v-col>
+        <v-col>
+          <v-text-field
+            class="ma-auto"
+            v-model="search"
+            append-icon="mdi-magnify"
+            clearable
+            label="Search..."
+          />
+        </v-col>
+      </v-card-title>
 
-    <v-data-table
-      :search="search"
-      :headers="headers"
-      :items="items"
-      hide-default-footer
-      :items-per-page="480"
-      fixed-header
-      height="450px"
-      dense
-      multi-sort
-      hover
-    />
-  </v-card>
+      <v-data-table
+        :search="search"
+        :headers="headers"
+        :items="items"
+        hide-default-footer
+        :items-per-page="480"
+        fixed-header
+        height="500"
+        dense
+        multi-sort
+        hover
+    /></v-card>
+  </v-container>
 </template>
 
 <script>
@@ -42,6 +44,7 @@ export default {
 
   data() {
     return {
+      buttons: false,
       filename: "",
       search: "",
       headers: [],

@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form" lazy-validation class="width">
-    <v-row justify="center" class="mx-auto mb-10">
-      <h1 class="mb-2 mt-4">Upload your files</h1>
+    <v-row justify="center">
+      <h1 class="mb-3">Upload your files</h1>
 
       <v-file-input
         label="Click here to select a .csv file"
@@ -74,7 +74,6 @@ export default {
           } else {
             this.file_csv = null;
             this.alert_info = true;
-            // console.log("O arquivo não tem o padrão -result.csv");
           }
         });
       }
@@ -91,7 +90,6 @@ export default {
           } else {
             this.file_txt = null;
             this.alert_info = true;
-            // console.log("O arquivo não tem o padrão -strings.txt");
           }
         });
       }
@@ -101,14 +99,16 @@ export default {
   methods: {
     process_files() {
       var validation = this.$refs.form.validate();
-      const size = this.file_csv.size + this.file_txt.size;
-      if (size > 800000) {
-        this.alert_error = true;
-      }
-      if (validation && size <= 800000) {
-        this.alert_info = false;
-        this.alert_error = false;
-        EventBus.$emit("process_csv");
+      if (this.file_txt && this.file_csv) {
+        const size = this.file_csv.size + this.file_txt.size;
+
+        if (size > 800000) {
+          this.alert_error = true;
+        } else if (validation) {
+          this.alert_info = false;
+          this.alert_error = false;
+          EventBus.$emit("process_csv");
+        }
       }
     },
   },
