@@ -1,7 +1,9 @@
 <template>
-  <v-form ref="form" lazy-validation class="width">
-    <v-row justify="center">
-      <h1 class="mb-3">Upload your files</h1>
+  <v-form ref="form" lazy-validation>
+    <v-col>
+      <v-row justify="center">
+        <h1 class="mb-5">Upload your files</h1>
+      </v-row>
 
       <v-file-input
         label="Click here to select a .csv file"
@@ -14,7 +16,6 @@
         v-model="file_csv"
         :rules="rules"
       />
-
       <v-file-input
         label="Click here to select a .txt file"
         accept=".txt"
@@ -34,11 +35,13 @@
         Sum of file size must be less than 800Kb
       </v-alert>
 
-      <v-btn color="indigo" dark @click="process_files"
-        >PROCESS FILES
-        <v-icon dark right>mdi-cloud-upload</v-icon>
-      </v-btn>
-    </v-row>
+      <v-row justify="center" class="ma-auto">
+        <v-btn class="" color="indigo" dark @click="process_files"
+          >PROCESS FILES
+          <v-icon dark right>mdi-cloud-upload</v-icon>
+        </v-btn>
+      </v-row>
+    </v-col>
   </v-form>
 </template>
 
@@ -115,13 +118,4 @@ export default {
 };
 </script>
 
-<style>
-.v-file-input {
-  width: 280px;
-  max-width: 280px;
-}
-.width {
-  width: 280px;
-  max-width: 280px;
-}
-</style>
+<style></style>

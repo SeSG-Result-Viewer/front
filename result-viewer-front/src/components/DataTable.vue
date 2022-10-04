@@ -1,22 +1,27 @@
 <template>
   <v-container>
-    <v-row class="ma-auto" justify="end" v-if="buttons">
-      <v-btn text color="indigo">Calculate Metrics</v-btn>
-      <v-btn text color="indigo">Export</v-btn>
-    </v-row>
-    <v-card class="mt-2">
+    <v-card v-if="tableCard">
       <v-card-title align="start">
         <v-col>
-          <h2>{{ filename }}</h2>
-        </v-col>
-        <v-col>
-          <v-text-field
-            class="ma-auto"
-            v-model="search"
-            append-icon="mdi-magnify"
-            clearable
-            label="Search..."
-          />
+          <v-row>
+            <v-row class="ma-auto" justify="start">
+              <h2>{{ filename }}</h2></v-row
+            >
+
+            <v-row class="ma-auto" justify="center">
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                clearable
+                label="Search..."
+              />
+            </v-row>
+
+            <v-row class="ma-auto" justify="end">
+              <v-btn text color="indigo">Calculate Metrics</v-btn>
+              <v-btn text color="indigo">Export</v-btn>
+            </v-row>
+          </v-row>
         </v-col>
       </v-card-title>
 
@@ -44,7 +49,7 @@ export default {
 
   data() {
     return {
-      buttons: false,
+      tableCard: false,
       filename: "",
       search: "",
       headers: [],
@@ -55,6 +60,7 @@ export default {
     process_csv() {
       try {
         this.items = this.headers = [];
+        this.tableCard = true;
         const archive_csv = this.$store.state.archive_csv;
         const teste = this.$store.state.archive_csv_name;
         this.filename = teste;

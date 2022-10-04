@@ -1,29 +1,30 @@
 <template>
   <v-container>
     <v-col>
-      <v-row class="ma-auto mb-5">
+      <v-row class="ma-auto">
         <v-col>
           <UploadFile />
         </v-col>
 
         <v-col>
-          <v-card class="ma-auto ma-xs-16" max-width="500">
-            <v-card-title>Informativos</v-card-title>
+          <v-card class="ma-auto" min-width="300">
+            <v-card-title>Informative</v-card-title>
             <v-card-text>
-              <p>1st - Insert your files returned from Sesg.</p>
-              <p>
+              <h3>1st - Insert your files returned from Sesg.</h3>
+              <h3>
+                <br />
                 2nd - Calculate Metrics returns additional columns informing the
                 score of each string (table row).
-              </p>
-              <p>
+              </h3>
+              <br />
+              <h3>
                 3rd - It is possible to export the table containing the metrics
                 columns.
-              </p>
+              </h3>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
-      <v-divider class="ma-2"></v-divider>
       <v-row> <DataTable /> </v-row
     ></v-col>
   </v-container>
@@ -42,3 +43,5 @@ export default {
   },
 };
 </script>
+
+<style></style>
