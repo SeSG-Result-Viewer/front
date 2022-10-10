@@ -5,7 +5,7 @@
         <v-col>
           <v-row>
             <v-row class="ma-auto" justify="start">
-              <h2>{{ filename }}</h2></v-row
+              <h2>{{ fileName }}</h2></v-row
             >
 
             <v-row class="ma-auto" justify="center">
@@ -18,7 +18,9 @@
             </v-row>
 
             <v-row class="ma-auto" justify="end">
-              <v-btn text color="indigo">Calculate Metrics</v-btn>
+              <v-btn text color="indigo" @click="returnMetrics"
+                >Calculate Metrics</v-btn
+              >
               <v-btn text color="indigo">Export</v-btn>
             </v-row>
           </v-row>
@@ -42,7 +44,8 @@
 
 <script>
 import EventBus from "../utils/bus";
-const Papa = require("papaparse");
+import ServicesBack from "../service/FunctionsBack.js";
+import ServicesFront from "../service/FunctionsFront.js";
 
 export default {
   name: "DataTable",
@@ -50,58 +53,48 @@ export default {
   data() {
     return {
       tableCard: false,
-      filename: "",
+      fileName: "",
+      json: null,
       search: "",
       headers: [],
       items: [],
     };
   },
+
+  servicesBack: null,
+  servicesFront: null,
+  created() {
+    this.servicesBack = new ServicesBack();
+    this.servicesFront = new ServicesFront();
+  },
+
   methods: {
-    process_csv() {
-      try {
-        this.items = this.headers = [];
-        this.tableCard = true;
-        const archive_csv = this.$store.state.archive_csv;
-        const teste = this.$store.state.archive_csv_name;
-        this.filename = teste;
-        Papa.parse(archive_csv, {
-          header: true,
-          delimiter: ",",
-          skipEmptyLines: true,
-          complete: (json) => {
-            this.items = json.data;
-            this.process_headers(json.meta.fields);
-            EventBus.$emit("processed_csv");
-          },
-        });
-      } catch (error) {
-        EventBus.$emit("processed_csv");
-        console.error(error);
-      }
+    processData() {
+      this.tableCard = true;
+      this.fileName = this.$store.state.archive_csv_name;
+      const json = this.servicesFront.processCSV(this.$store.state.archive_csv);
+      this.json = json;
+      this.items = json.data;
+      this.headers = this.servicesFront.getHeaders(json.meta.fields);
     },
 
-    process_headers(headers) {
-      try {
-        headers.forEach((header) => {
-          this.headers.push({
-            text: header,
-            value: header,
-          });
+    returnMetrics() {
+      this.servicesBack
+        .getMetrics(this.json, this.$store.state.gs_size)
+        .then((data) => {
+          const csv_metrics = this.servicesFront.getDataBack(data);
+          this.$store.commit("update_csv", csv_metrics);
+          this.items = this.headers = [];
+          this.processData();
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        EventBus.$emit("processed_csv");
-      } catch (error) {
-        EventBus.$emit("processed_csv");
-        console.error(error);
-      }
-    },
-
-    process_txt() {
-      console.log("Nothing");
     },
   },
 
   mounted() {
-    EventBus.$on("process_csv", this.process_csv);
+    EventBus.$on("processData", this.processData);
   },
 };
 </script>

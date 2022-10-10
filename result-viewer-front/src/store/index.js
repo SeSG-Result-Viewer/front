@@ -4,18 +4,21 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  
   state: {
+    gs_size: "",
     archive_csv_name: "",
     archive_csv: "",
     archive_txt_name: "",
-    archive_txt: ""
+    archive_txt: "",
   },
   
-  getters: {
-    
-  },
-
   mutations: {
+    update_gs_size(state, gs_size) {
+      state.gs_size = gs_size;
+      // console.log(this.state.gs_size)
+    },
+
     update_csv(state, file) {
       state.archive_csv = file;
       // console.log(this.state.archive_csv)
@@ -36,10 +39,4 @@ export default new Vuex.Store({
       // console.log(this.state.archive_txt_name)
     },
   },
-
-  actions: {
-  },
-
-  modules: {
-  }
 })
