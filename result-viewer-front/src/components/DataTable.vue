@@ -21,7 +21,7 @@
               <v-btn text color="indigo" @click="returnMetrics"
                 >Calculate Metrics</v-btn
               >
-              <v-btn text color="indigo">Export</v-btn>
+              <v-btn text color="indigo" @click="exportCSV">Export</v-btn>
             </v-row>
           </v-row>
         </v-col>
@@ -90,6 +90,13 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    exportCSV() {
+      this.servicesFront.getCurrentData(
+        this.$store.state.archive_csv,
+        this.$store.state.archive_csv_name
+      );
     },
   },
 

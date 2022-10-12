@@ -13,7 +13,7 @@
           chips
           show-size
           prepend-icon=""
-          v-model="file_csv"
+          v-model="fileCSV"
           :rules="rules"
         />
       </v-row>
@@ -26,7 +26,7 @@
           chips
           show-size
           prepend-icon=""
-          v-model="file_txt"
+          v-model="fileTXT"
           :rules="rules"
         />
       </v-row>
@@ -37,20 +37,20 @@
           label="What is the GS-SIZE of this review?"
           outlined
           :rules="rulesGS"
-          v-model="gs_size"
+          v-model="gsSize"
         >
         </v-text-field>
       </v-row>
 
-      <v-alert type="info" v-model="alert_info" dismissible>
+      <v-alert type="info" v-model="alertInfo" dismissible>
         Files must contain -result and -string in the names.
       </v-alert>
-      <v-alert type="error" v-model="alert_error" dismissible>
+      <v-alert type="error" v-model="alertError" dismissible>
         Sum of file size must be less than 800Kb
       </v-alert>
 
       <v-row justify="center" class="ma-auto mt-2">
-        <v-btn class="" color="indigo" dark @click="process_files"
+        <v-btn class="" color="indigo" dark @click="saveFiles"
           >PROCESS FILES
           <v-icon dark right>mdi-cloud-upload</v-icon>
         </v-btn>
@@ -67,13 +67,13 @@ export default {
 
   data() {
     return {
-      alert_info: false,
-      alert_error: false,
-      file_txt: null,
-      file_csv: null,
-      csv_size: "",
-      txt_size: "",
-      gs_size: "",
+      alertInfo: false,
+      alertError: false,
+      fileTXT: null,
+      fileCSV: null,
+      csvSize: "",
+      txtSize: "",
+      gsSize: "",
       rules: [
         (f) => !!f || "File is required",
         (f) => (f && f.size > 0) || "File is required",
@@ -83,32 +83,32 @@ export default {
   },
 
   watch: {
-    file_csv(f) {
+    fileCSV(f) {
       if (f) {
         f.text().then((file) => {
-          this.csv_size = f.size;
+          this.csvSize = f.size;
           if (f.name.includes("-result.csv")) {
             this.$store.commit("update_csv_name", f.name);
             this.$store.commit("update_csv", file);
           } else {
-            this.file_csv = null;
-            this.alert_info = true;
+            this.fileCSV = null;
+            this.alertInfo = true;
           }
         });
       }
     },
 
-    file_txt(f) {
+    fileTXT(f) {
       if (f) {
         f.text().then((file) => {
-          this.txt_size = f.size;
+          this.txtSize = f.size;
 
           if (f.name.includes("-strings.txt")) {
             this.$store.commit("update_txt_name", f.name);
             this.$store.commit("update_txt", file);
           } else {
-            this.file_txt = null;
-            this.alert_info = true;
+            this.fileTXT = null;
+            this.alertInfo = true;
           }
         });
       }
@@ -116,23 +116,23 @@ export default {
   },
 
   methods: {
-    saveGS_Size(n) {
+    saveGSSize(n) {
       if (n) {
         this.$store.commit("update_gs_size", n);
       }
     },
 
-    process_files() {
-      this.saveGS_Size(this.gs_size);
+    saveFiles() {
+      this.saveGSSize(this.gsSize);
       var validation = this.$refs.form.validate();
-      if (this.file_txt && this.file_csv) {
-        const size = this.file_csv.size + this.file_txt.size;
+      if (this.fileTXT && this.fileCSV) {
+        const size = this.fileCSV.size + this.fileTXT.size;
 
         if (size > 800000) {
-          this.alert_error = true;
+          this.alertError = true;
         } else if (validation) {
-          this.alert_info = false;
-          this.alert_error = false;
+          this.alertInfo = false;
+          this.alertError = false;
           EventBus.$emit("processData");
         }
       }

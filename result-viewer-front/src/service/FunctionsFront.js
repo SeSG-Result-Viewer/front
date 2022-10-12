@@ -2,10 +2,10 @@ const Papa = require("papaparse");
 
 export default class ServicesFront {
 
-    processCSV(teste){
+    processCSV(file){
         var fileJSON = null;
 
-        Papa.parse(teste, {
+        Papa.parse(file, {
             header: true,
             delimiter: ",",
             skipEmptyLines: true,
@@ -18,14 +18,14 @@ export default class ServicesFront {
     }
 
     getHeaders(headers){
-        const teste = []
+        const cols = []
         headers.forEach((header) => {
-            teste.push({
+            cols.push({
             text: header,
             value: header,
             });
         });
-        return teste
+        return cols
     }
 
     getDataBack(data) {
@@ -45,5 +45,20 @@ export default class ServicesFront {
         csv = csv.join('\r\n');
 
         return csv
+    }
+
+    getCurrentData(file, fileName){
+        const fileNameMetrics = fileName.substring(0, fileName.length - 4) + "-metrics.csv";
+
+        var csvFile;
+        var downloadLink;
+
+        csvFile = new Blob([file], {type:"text/csv"});
+        downloadLink = document.createElement("a");
+        downloadLink.download = fileNameMetrics;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
     }
 }
