@@ -22,8 +22,8 @@
               </h3>
               <br />
               <h3>
-                4rd - It is possible to export the table containing the metrics
-                columns.
+                4rd - You can export the table after performing the metrics
+                calculation.
               </h3>
             </v-card-text>
           </v-card>

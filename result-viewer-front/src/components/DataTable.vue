@@ -21,7 +21,9 @@
               <v-btn text color="indigo" @click="returnMetrics"
                 >Calculate Metrics</v-btn
               >
-              <v-btn text color="indigo" @click="exportCSV">Export</v-btn>
+              <v-btn v-if="calcMetrics" text color="indigo" @click="getFileCSV"
+                >Export</v-btn
+              >
             </v-row>
           </v-row>
         </v-col>
@@ -36,9 +38,15 @@
         fixed-header
         height="500"
         dense
-        multi-sort
         hover
-    /></v-card>
+        multi-sort
+        :show-select="showSelect"
+        item-key="graph_id"
+        v-model="selected"
+        checkbox-color="indigo"
+      >
+      </v-data-table>
+    </v-card>
   </v-container>
 </template>
 
@@ -58,6 +66,9 @@ export default {
       search: "",
       headers: [],
       items: [],
+      selected: [],
+      showSelect: false,
+      calcMetrics: false,
     };
   },
 
@@ -72,31 +83,48 @@ export default {
     processData() {
       this.tableCard = true;
       this.fileName = this.$store.state.archive_csv_name;
-      const json = this.servicesFront.processCSV(this.$store.state.archive_csv);
-      this.json = json;
-      this.items = json.data;
-      this.headers = this.servicesFront.getHeaders(json.meta.fields);
+      try {
+        const json = this.servicesFront.processCSV(
+          this.$store.state.archive_csv
+        );
+        this.json = json;
+        this.items = json.data;
+        this.headers = this.servicesFront.getHeaders(json.meta.fields);
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     returnMetrics() {
       this.servicesBack
         .getMetrics(this.json, this.$store.state.gs_size)
         .then((data) => {
-          const csv_metrics = this.servicesFront.getDataBack(data);
+          const csv_metrics = this.servicesFront.getDataCSV(data);
           this.$store.commit("update_csv", csv_metrics);
           this.items = this.headers = [];
           this.processData();
+          this.showSelect = true;
+          this.calcMetrics = true;
         })
         .catch((error) => {
           console.log(error);
         });
     },
 
-    exportCSV() {
-      this.servicesFront.getCurrentData(
-        this.$store.state.archive_csv,
-        this.$store.state.archive_csv_name
-      );
+    getFileCSV() {
+      if (this.selected.length === 0) {
+        this.servicesFront.exportCSV(
+          this.$store.state.archive_csv,
+          this.$store.state.archive_csv_name
+        );
+      } else {
+        const stringifySelected = JSON.stringify(this.selected);
+        const csvSelected = this.servicesFront.getDataCSV(stringifySelected);
+        this.servicesFront.exportCSV(
+          csvSelected,
+          this.$store.state.archive_csv_name
+        );
+      }
     },
   },
 

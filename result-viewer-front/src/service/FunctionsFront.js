@@ -28,7 +28,7 @@ export default class ServicesFront {
         return cols
     }
 
-    getDataBack(data) {
+    getDataCSV(data) {
         const objeto = JSON.parse(data);
         const json = objeto
         const fields = Object.keys(json[0])
@@ -47,8 +47,10 @@ export default class ServicesFront {
         return csv
     }
 
-    getCurrentData(file, fileName){
+    exportCSV(file, fileName){
         const fileNameMetrics = fileName.substring(0, fileName.length - 4) + "-metrics.csv";
+        // console.log(file)
+        // console.log(fileNameMetrics);
 
         var csvFile;
         var downloadLink;
@@ -60,5 +62,10 @@ export default class ServicesFront {
         downloadLink.style.display = "none";
         document.body.appendChild(downloadLink);
         downloadLink.click();
+    }
+
+    setLoginData(name, email, password){
+        const loginData = {"name": name, "email": email, "password": password}
+        return loginData;
     }
 }
