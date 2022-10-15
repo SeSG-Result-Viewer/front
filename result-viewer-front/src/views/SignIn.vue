@@ -5,7 +5,7 @@
         <h2 class="ma-auto">Make your login</h2>
       </v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form ref="form" lazy-validation>
           <v-text-field
             v-model="email"
             :rules="emailRules"
@@ -14,20 +14,16 @@
           ></v-text-field>
 
           <v-text-field
-            v-model="Password"
-            type="password"
-            :rules="PasswordRules"
+            v-model="password"
+            :type="showPassword ? 'text' : 'password'"
+            :rules="passwordRules"
             label="Password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPassword = !showPassword"
             required
           ></v-text-field>
 
-          <v-btn
-            :disabled="!valid"
-            color="indigo"
-            dark
-            class="mt-5"
-            @click="login"
-          >
+          <v-btn color="indigo" dark class="mt-5" @click="login">
             SIGN IN
           </v-btn>
         </v-form>
@@ -41,14 +37,14 @@ export default {
   name: "SignIn",
 
   data: () => ({
-    valid: true,
     email: "",
     emailRules: [
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
-    Password: "",
-    PasswordRules: [
+    showPassword: false,
+    password: "",
+    passwordRules: [
       (v) => !!v || "Password is required",
       (v) =>
         (v && v.length >= 8) ||
@@ -59,7 +55,8 @@ export default {
   methods: {
     login() {
       if (this.$refs.form.validate()) {
-        this.$router.push({ name: "home" });
+        // this.$router.push({ name: "home" });
+        console.log("Not implemented");
       }
     },
   },

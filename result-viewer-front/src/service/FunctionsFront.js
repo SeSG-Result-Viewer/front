@@ -64,8 +64,4 @@ export default class ServicesFront {
         downloadLink.click();
     }
 
-    setLoginData(name, email, password){
-        const loginData = {"name": name, "email": email, "password": password}
-        return loginData;
-    }
 }

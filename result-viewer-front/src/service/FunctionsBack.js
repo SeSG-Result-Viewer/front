@@ -21,4 +21,23 @@ export default class ServicesBack {
         const data = await res.json();
         return data;
     }
+
+    async sendLoginData(loginData){
+        const body = {
+            loginData: loginData
+        }
+        console.log(loginData);
+        console.log("Function not finished!!!")
+
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        };
+
+        
+        await fetch(base_url + "sign-up", requestOptions).catch((error) => {
+        return error;
+        })
+    }
 }

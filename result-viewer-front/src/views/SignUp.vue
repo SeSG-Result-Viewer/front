@@ -5,42 +5,49 @@
         <h2 class="ma-auto">Make your registration</h2>
       </v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form ref="form" lazy-validation>
+          <v-text-field
+            v-model="name"
+            :rules="nameRules"
+            label="Name"
+            placeholder="Guilherme Oliveira da Silva"
+            required
+          ></v-text-field>
+
           <v-text-field
             v-model="email"
             :rules="emailRules"
             label="E-mail"
+            placeholder="nome@email.com"
             required
           ></v-text-field>
 
           <v-text-field
             v-model="password"
-            type="password"
+            :type="show1 ? 'text' : 'password'"
             :rules="passwordRules"
             label="Password"
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="show1 = !show1"
             required
           ></v-text-field>
 
           <v-text-field
             v-model="confirmPassword"
-            type="password"
+            :type="show2 ? 'text' : 'password'"
             :rules="passwordRules"
             label="Confirm Password"
+            :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="show2 = !show2"
             required
           ></v-text-field>
 
-          <v-alert type="error" v-model="alert_error" dismissible>
+          <v-alert type="error" v-model="alertError" dismissible>
             Passwords don't match!
           </v-alert>
 
           <v-row justify="start" class="ma-auto mt-5">
-            <v-btn
-              :disabled="!valid"
-              color="indigo"
-              dark
-              class="mr-2"
-              @click="SignUp"
-            >
+            <v-btn color="indigo" dark class="mr-2" @click="validation">
               SIGN IN
             </v-btn>
 
@@ -53,14 +60,19 @@
 </template>
 
 <script>
-import router from "@/router";
+// import router from "@/router";
+import ServicesBack from "../service/FunctionsBack.js";
+import ServicesFront from "../service/FunctionsFront.js";
 
 export default {
   name: "SignUp",
 
   data: () => ({
-    valid: true,
-    alert_error: false,
+    alertError: false,
+    show1: false,
+    show2: false,
+    name: "",
+    nameRules: [(v) => !!v || "Name is required"],
     email: "",
     emailRules: [
       (v) => !!v || "E-mail is required",
@@ -74,22 +86,32 @@ export default {
     ],
   }),
 
-  watch: {
-    confirmPassword() {},
-    password() {},
-    name() {},
-    email() {},
+  servicesBack: null,
+  servicesFront: null,
+  created() {
+    this.servicesBack = new ServicesBack();
+    this.servicesFront = new ServicesFront();
   },
 
   methods: {
-    SignUp() {
+    validation() {
       var validation = this.$refs.form.validate();
       if (this.password !== this.confirmPassword) {
-        this.alert_error = true;
+        this.alertError = true;
       } else if (validation) {
-        this.alert_error = false;
-        router.push("/signin");
+        this.alertError = false;
+        this.signUp();
       }
+    },
+
+    signUp() {
+      const setLoginData = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+      };
+      this.servicesBack.sendLoginData(setLoginData);
+      // router.push("/signin");
     },
 
     reset() {

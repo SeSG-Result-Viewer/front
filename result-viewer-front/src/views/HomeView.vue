@@ -12,9 +12,7 @@
             <v-card-text>
               <h3>1st - Insert your files returned from Sesg.</h3>
               <br />
-              <h3>
-                2nd - GS-Size is basically how many articles the review has.
-              </h3>
+              <h3>2nd - GS-Size is the number of articles the review has.</h3>
               <br />
               <h3>
                 3nd - Calculate Metrics returns additional columns informing the
