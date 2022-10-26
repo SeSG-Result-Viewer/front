@@ -6,26 +6,37 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="E-mail"
-            required
-          ></v-text-field>
+          <v-row justify="center">
+            <v-text-field
+              placeholder="nome@email.com"
+              v-model="email"
+              :rules="emailRules"
+              label="E-mail"
+              required
+            ></v-text-field>
+          </v-row>
 
-          <v-text-field
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            :rules="passwordRules"
-            label="Password"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="showPassword = !showPassword"
-            required
-          ></v-text-field>
+          <v-row justify="center">
+            <v-text-field
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              :rules="passwordRules"
+              label="Password"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append="showPassword = !showPassword"
+              required
+            ></v-text-field>
+          </v-row>
 
-          <v-btn color="indigo" dark class="mt-5" @click="login">
-            SIGN IN
-          </v-btn>
+          <v-row justify="center">
+            <v-btn color="indigo" dark @click="login"> SIGN IN </v-btn>
+          </v-row>
+
+          <v-row justify="center" class="mt-5">
+            <v-btn color="indigo" text dark to="/signup">
+              Don't have an account? Click here.
+            </v-btn>
+          </v-row>
         </v-form>
       </v-card-text>
     </v-card>
@@ -33,6 +44,8 @@
 </template>
 
 <script>
+import ServicesBack from "../service/FunctionsBack.js";
+
 export default {
   name: "SignIn",
 
@@ -52,11 +65,20 @@ export default {
     ],
   }),
 
+  servicesBack: null,
+  created() {
+    this.servicesBack = new ServicesBack();
+  },
+
   methods: {
     login() {
       if (this.$refs.form.validate()) {
-        // this.$router.push({ name: "home" });
-        console.log("Not implemented");
+        const setLoginData = {
+          email: this.email,
+          password: this.password,
+        };
+        this.servicesBack.sendLoginData(setLoginData);
+        // router.push("/signin");
       }
     },
   },
