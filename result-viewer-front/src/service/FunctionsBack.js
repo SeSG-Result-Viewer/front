@@ -42,10 +42,14 @@ export default class ServicesBack {
         return data;
     }
 
-    async sendTXT(fileTXT) {
+    async sendTXT(txtname, txtfile) {
         const body = {
-            fileTXT: fileTXT,
+            txtname: txtname,
+            txtfile: txtfile,
         };
+        console.log(txtname);
+        console.log(txtfile);
+        console.log("Function not finished!!!");
 
         const requestOptions = {
             method: "POST",

@@ -50,7 +50,7 @@
       </v-alert>
 
       <v-row justify="center" class="ma-auto mt-2">
-        <v-btn class="" color="indigo" dark @click="saveFiles"
+        <v-btn class="" color="indigo" dark @click="processFiles"
           >PROCESS FILES
           <v-icon dark right>mdi-cloud-upload</v-icon>
         </v-btn>
@@ -61,6 +61,7 @@
 
 <script>
 import EventBus from "../utils/bus";
+import ServicesBack from "../service/FunctionsBack.js";
 
 export default {
   name: "UploadFile",
@@ -115,15 +116,13 @@ export default {
     },
   },
 
-  methods: {
-    saveGSSize(n) {
-      if (n) {
-        this.$store.commit("update_gs_size", n);
-      }
-    },
+  servicesBack: null,
+  created() {
+    this.servicesBack = new ServicesBack();
+  },
 
-    saveFiles() {
-      this.saveGSSize(this.gsSize);
+  methods: {
+    processFiles() {
       var validation = this.$refs.form.validate();
       if (this.fileTXT && this.fileCSV) {
         const size = this.fileCSV.size + this.fileTXT.size;
@@ -133,8 +132,19 @@ export default {
         } else if (validation) {
           this.alertInfo = false;
           this.alertError = false;
+          this.saveGSSize(this.gsSize);
+          this.servicesBack.sendTXT(
+            this.$store.state.archive_txt_name,
+            this.$store.state.archive_txt
+          );
           EventBus.$emit("processData");
         }
+      }
+    },
+
+    saveGSSize(n) {
+      if (n) {
+        this.$store.commit("update_gs_size", n);
       }
     },
   },
