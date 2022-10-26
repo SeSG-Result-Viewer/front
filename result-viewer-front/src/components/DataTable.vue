@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <v-card v-if="tableCard">
-      <v-card-title align="start">
+      <v-card-title>
         <v-col>
           <v-row>
             <v-row class="ma-auto" justify="start">
-              <h2>{{ fileName }}</h2></v-row
-            >
+              <h2>{{ fileName }}</h2>
+            </v-row>
 
             <v-row class="ma-auto" justify="center">
               <v-text-field
@@ -21,7 +21,11 @@
               <v-btn text color="indigo" @click="returnMetrics"
                 >Calculate Metrics</v-btn
               >
-              <v-btn v-if="calcMetrics" text color="indigo" @click="getFileCSV"
+              <v-btn
+                v-if="calcMetrics"
+                text
+                color="indigo"
+                @click="exportMetricsFile"
                 >Export</v-btn
               >
             </v-row>
@@ -30,22 +34,36 @@
       </v-card-title>
 
       <v-data-table
+        :show-select="calcMetrics"
         :search="search"
         :headers="headers"
         :items="items"
-        hide-default-footer
-        :items-per-page="480"
+        v-model="selected"
+        item-key="graph_id"
         fixed-header
-        height="500"
+        :items-per-page="itemsPerPage"
+        hide-default-footer
+        checkbox-color="indigo"
         dense
         hover
         multi-sort
-        :show-select="showSelect"
-        item-key="graph_id"
-        v-model="selected"
-        checkbox-color="indigo"
+        show-expand
+        :loading="loading"
+        :page.sync="page"
+        @page-count="pageCount = $event"
       >
+        <!-- EXPANDED ROW -->
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">More info about {{ item.graph_id }}</td>
+        </template>
+        <!-- EXPANDED ROW -->
       </v-data-table>
+
+      <v-divider></v-divider>
+
+      <v-row justify="center" class="mx-auto my-5">
+        <v-pagination v-model="page" :length="pageCount"></v-pagination>
+      </v-row>
     </v-card>
   </v-container>
 </template>
@@ -60,6 +78,10 @@ export default {
 
   data() {
     return {
+      page: 1,
+      pageCount: 0,
+      itemsPerPage: 15,
+      loading: false,
       tableCard: false,
       fileName: "",
       json: null,
@@ -67,7 +89,6 @@ export default {
       headers: [],
       items: [],
       selected: [],
-      showSelect: false,
       calcMetrics: false,
     };
   },
@@ -81,40 +102,52 @@ export default {
 
   methods: {
     processData() {
-      this.tableCard = true;
-      this.fileName = this.$store.state.archive_csv_name;
+      this.loading = true;
+      this.calcMetrics = false;
       try {
         const json = this.servicesFront.processCSV(
           this.$store.state.archive_csv
         );
         this.json = json;
-        this.items = json.data;
+        this.tableCard = true;
+        this.fileName = this.$store.state.archive_csv_name;
         this.headers = this.servicesFront.getHeaders(json.meta.fields);
+        this.items = json.data;
+        this.loading = false;
       } catch (error) {
         console.log(error);
       }
     },
 
     returnMetrics() {
+      this.loading = true;
       this.servicesBack
         .getMetrics(this.json, this.$store.state.gs_size)
         .then((data) => {
           const csv_metrics = this.servicesFront.getDataCSV(data);
-          this.$store.commit("update_csv", csv_metrics);
-          this.items = this.headers = [];
-          this.processData();
-          this.showSelect = true;
+          this.$store.commit("update_csv_metrics", csv_metrics);
+          this.showMetrics();
           this.calcMetrics = true;
+          this.loading = false;
         })
         .catch((error) => {
           console.log(error);
         });
     },
 
-    getFileCSV() {
+    showMetrics() {
+      this.items = this.headers = [];
+      const json = this.servicesFront.processCSV(
+        this.$store.state.archive_csv_metrics
+      );
+      this.headers = this.servicesFront.getHeaders(json.meta.fields);
+      this.items = json.data;
+    },
+
+    exportMetricsFile() {
       if (this.selected.length === 0) {
         this.servicesFront.exportCSV(
-          this.$store.state.archive_csv,
+          this.$store.state.archive_csv_metrics,
           this.$store.state.archive_csv_name
         );
       } else {
