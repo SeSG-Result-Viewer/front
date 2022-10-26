@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <SideBar :items="items"></SideBar>
     <v-col>
       <v-row class="ma-auto">
         <v-col>
@@ -12,7 +13,7 @@
             <v-card-text>
               <h3>1st - Insert your files returned from Sesg.</h3>
               <br />
-              <h3>2nd - GS-Size is the number of articles the review has.</h3>
+              <h3>2nd - GS-Size is the number of articles in the review.</h3>
               <br />
               <h3>
                 3nd - Calculate Metrics returns additional columns informing the
@@ -23,18 +24,27 @@
                 4rd - You can export the table after performing the metrics
                 calculation.
               </h3>
+              <br />
+              <h3>
+                5rd - You have access to your upload history in the sidebar on
+                the side.
+              </h3>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
-      <v-row> <DataTable /> </v-row
-    ></v-col>
+
+      <v-row>
+        <DataTable />
+      </v-row>
+    </v-col>
   </v-container>
 </template>
 
 <script>
 import UploadFile from "@/components/UploadFile.vue";
 import DataTable from "@/components/DataTable.vue";
+import SideBar from "@/components/SideBar.vue";
 
 export default {
   name: "HomeView",
@@ -42,6 +52,27 @@ export default {
   components: {
     UploadFile,
     DataTable,
+    SideBar,
+  },
+
+  data() {
+    return {
+      // RETORNAR OS ITEMS DO BANCO
+      items: [
+        {
+          text: "teste1-results",
+        },
+        {
+          text: "teste2-results",
+        },
+        {
+          text: "teste3-results",
+        },
+        {
+          text: "teste4-results",
+        },
+      ],
+    };
   },
 };
 </script>
