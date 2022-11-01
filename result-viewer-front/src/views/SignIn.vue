@@ -8,7 +8,6 @@
         <v-form ref="form" lazy-validation>
           <v-row justify="center">
             <v-text-field
-              placeholder="nome@email.com"
               v-model="email"
               :rules="emailRules"
               label="E-mail"
@@ -45,9 +44,17 @@
 
 <script>
 import ServicesBack from "../service/FunctionsBack.js";
+import ServicesFront from "../service/FunctionsFront.js";
 
 export default {
   name: "SignIn",
+
+  servicesBack: null,
+  servicesFront: null,
+  created() {
+    this.servicesBack = new ServicesBack();
+    this.servicesFront = new ServicesFront();
+  },
 
   data: () => ({
     email: "",
@@ -65,19 +72,10 @@ export default {
     ],
   }),
 
-  servicesBack: null,
-  created() {
-    this.servicesBack = new ServicesBack();
-  },
-
   methods: {
     login() {
       if (this.$refs.form.validate()) {
-        const setLoginData = {
-          email: this.email,
-          password: this.password,
-        };
-        this.servicesBack.sendLoginData(setLoginData);
+        this.servicesBack.sendLoginData(this.email, this.password);
         // router.push("/signin");
       }
     },

@@ -1,36 +1,21 @@
 const base_url = "http://127.0.0.1:8000/";
 
 export default class ServicesBack {
-   async sendSignUpData(signUpData) {
+   async sendSignUpData(name, email, password) {
       const body = {
-         signUpData: signUpData,
+         name: name,
+         email: email,
+         password: password,
       };
-      console.log(signUpData);
-      console.log("Function not finished!!!");
+      console.log(body)
 
       const requestOptions = {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify(body),
       };
-
-      await fetch(base_url + "sign-up", requestOptions).catch((error) => {
-         return error;
-      });
-   }
-
-   async sendLoginData(loginData) {
-      const body = {
-         loginData: loginData,
-      };
-      console.log(loginData);
+      // console.log(requestOptions.body);
       console.log("Function not finished!!!");
-
-      const requestOptions = {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(body),
-      };
 
       const res = await fetch(base_url + "sign-up", requestOptions).catch(
          (error) => {
@@ -38,18 +23,16 @@ export default class ServicesBack {
          }
       );
 
-      const data = await res.json();
-      return data;
+      // RECEBE UM TRUE OU FALSE PARA A INSERÇÃO DOS DADOS NO BANCO
+      return res;
    }
 
-   async sendTXT(txtname, txtfile) {
+   async sendLoginData(email, password) {
       const body = {
-         txtname: txtname,
-         txtfile: txtfile,
+         email: email,
+         password: password,
       };
-      console.log(txtname);
-      console.log(txtfile);
-      console.log("Function not finished!!!");
+      console.log(body);
 
       const requestOptions = {
          method: "POST",
@@ -57,16 +40,18 @@ export default class ServicesBack {
          body: JSON.stringify(body),
       };
 
-      const res = await fetch(base_url + "file-txt", requestOptions).catch(
+      // console.log(requestOptions.body);
+      console.log("Function not finished!!!");
+
+
+      const res = await fetch(base_url + "sign-in", requestOptions).catch(
          (error) => {
             return error;
          }
       );
-
-      const data = await res.json();
-      return data;
+      // RECEBER UM TRUE OU FALSE CASO O USUÁRIO EXISTA
+      return res;
    }
-
 
    async getMetrics(json, gs_size) {
       const body = {
@@ -89,4 +74,39 @@ export default class ServicesBack {
       const data = await res.json();
       return data;
    }
+
+   async saveData(userId, uploadName, csvName, csvFile, txtName, txtFile) {
+      const body = {
+         userId: userId,
+         uploadName: uploadName,
+         csvName: csvName,
+         csvFile: csvFile,
+         txtName: txtName,
+         txtFile: txtFile
+      };
+      console.log(body);
+
+      const requestOptions = {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(body),
+      };
+      // console.log(requestOptions.body)
+      // console.log("Function not finished!!!");
+
+
+      const res = await fetch(base_url + "save-data", requestOptions).catch(
+         (error) => {
+            return error;
+         }
+      );
+
+      // RECEBER O TXT DE VOLTA E SALVAR NO STORE!
+      const data = await res.json();
+      return data;
+   }
+
+
+
+   // FUNÇÃO PARA RETORNAR O HISTÓRICO DO USUÁRIO
 }

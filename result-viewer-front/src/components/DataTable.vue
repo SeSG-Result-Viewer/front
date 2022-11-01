@@ -142,6 +142,14 @@ export default {
       );
       this.headers = this.servicesFront.getHeaders(json.meta.fields);
       this.items = json.data;
+      this.servicesBack.saveData(
+        "2",
+        this.$store.state.upload_name,
+        this.$store.state.archive_csv_name,
+        this.$store.state.archive_csv_metrics,
+        this.$store.state.archive_txt_name,
+        this.$store.state.archive_txt
+      );
     },
 
     exportMetricsFile() {

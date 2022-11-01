@@ -11,7 +11,7 @@
               v-model="name"
               :rules="nameRules"
               label="Name"
-              placeholder="Renato Oliveira da Silva"
+              placeholder="Guilherme Oliveira da Silva"
               required
             ></v-text-field>
           </v-row>
@@ -78,6 +78,7 @@
 <script>
 // import router from "@/router";
 import ServicesBack from "../service/FunctionsBack.js";
+import ServicesFront from "../service/FunctionsFront.js";
 
 export default {
   name: "SignUp",
@@ -102,8 +103,10 @@ export default {
   }),
 
   servicesBack: null,
+  servicesFront: null,
   created() {
     this.servicesBack = new ServicesBack();
+    this.servicesFront = new ServicesFront();
   },
 
   methods: {
@@ -118,12 +121,7 @@ export default {
     },
 
     signUp() {
-      const setSignUpData = {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-      };
-      this.servicesBack.sendSignUpData(setSignUpData);
+      this.servicesBack.sendSignUpData(this.name, this.email, this.password);
       // router.push("/signin");
     },
 

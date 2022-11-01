@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form" lazy-validation>
     <v-col>
-      <v-row justify="center">
+      <v-row justify="center" class="mb-2">
         <h1>Upload your files</h1>
       </v-row>
 
@@ -42,8 +42,20 @@
         </v-text-field>
       </v-row>
 
-      <v-alert type="info" v-model="alertInfo" dismissible>
-        Files must contain -result and -string in the names.
+      <v-row justify="center">
+        <v-text-field
+          class="fieldName"
+          type="text"
+          label="Set a name for the upload"
+          placeholder="Azeem"
+          outlined
+          :rules="rulesUploadName"
+          v-model="uploadName"
+        />
+      </v-row>
+
+      <v-alert type="info" v-model="alertInfo" dismissible class="mt-2">
+        Files must contain -result (.csv) and -string (.txt) in the names.
       </v-alert>
       <v-alert type="error" v-model="alertError" dismissible>
         Sum of file size must be less than 800Kb
@@ -68,18 +80,20 @@ export default {
 
   data() {
     return {
-      alertInfo: false,
-      alertError: false,
-      fileTXT: null,
       fileCSV: null,
       csvSize: "",
+      fileTXT: null,
       txtSize: "",
       gsSize: "",
+      uploadName: null,
+      alertInfo: false,
+      alertError: false,
       rules: [
         (f) => !!f || "File is required",
         (f) => (f && f.size > 0) || "File is required",
       ],
       rulesGS: [(f) => !!f || "GS Size is required"],
+      rulesUploadName: [(f) => !!f || "Upload name is required"],
     };
   },
 
@@ -114,6 +128,18 @@ export default {
         });
       }
     },
+
+    gsSize(s) {
+      if (s) {
+        this.$store.commit("update_gs_size", s);
+      }
+    },
+
+    uploadName(n) {
+      if (n) {
+        this.$store.commit("update_upload_name", n);
+      }
+    },
   },
 
   servicesBack: null,
@@ -132,19 +158,8 @@ export default {
         } else if (validation) {
           this.alertInfo = false;
           this.alertError = false;
-          this.saveGSSize(this.gsSize);
-          this.servicesBack.sendTXT(
-            this.$store.state.archive_txt_name,
-            this.$store.state.archive_txt
-          );
           EventBus.$emit("processData");
         }
-      }
-    },
-
-    saveGSSize(n) {
-      if (n) {
-        this.$store.commit("update_gs_size", n);
       }
     },
   },
