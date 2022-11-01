@@ -41,28 +41,26 @@
         v-model="selected"
         item-key="graph_id"
         fixed-header
-        :items-per-page="itemsPerPage"
-        hide-default-footer
+        :items-per-page="15"
         checkbox-color="indigo"
         dense
         hover
+        hide-default-footer
         multi-sort
-        show-expand
         :loading="loading"
         :page.sync="page"
         @page-count="pageCount = $event"
       >
-        <!-- EXPANDED ROW -->
-        <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">More info about {{ item.graph_id }}</td>
-        </template>
-        <!-- EXPANDED ROW -->
       </v-data-table>
 
-      <v-divider></v-divider>
+      <v-divider> </v-divider>
 
-      <v-row justify="center" class="mx-auto my-5">
-        <v-pagination v-model="page" :length="pageCount"></v-pagination>
+      <v-row justify="center" class="my-5">
+        <v-pagination
+          v-model="page"
+          :length="pageCount"
+          :total-visible="7"
+        ></v-pagination>
       </v-row>
     </v-card>
   </v-container>
@@ -78,9 +76,9 @@ export default {
 
   data() {
     return {
+      filters: { graph_id: [], min_df: [] },
       page: 1,
       pageCount: 0,
-      itemsPerPage: 15,
       loading: false,
       tableCard: false,
       fileName: "",
@@ -115,6 +113,7 @@ export default {
         this.items = json.data;
         this.loading = false;
       } catch (error) {
+        this.loading = false;
         console.log(error);
       }
     },
@@ -131,6 +130,7 @@ export default {
           this.loading = false;
         })
         .catch((error) => {
+          this.loading = false;
           console.log(error);
         });
     },

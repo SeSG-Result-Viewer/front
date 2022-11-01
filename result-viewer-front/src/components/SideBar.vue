@@ -41,6 +41,12 @@
     </v-list>
 
     <template v-slot:append>
+      <v-list-item class="mt-5">
+        <v-list-item-icon>
+          <v-icon color="white">mdi-account-circle</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title class="title">Usuario</v-list-item-title>
+      </v-list-item>
       <v-list-item link to="/logout" class="mt-5">
         <v-list-item-icon>
           <v-icon color="white">mdi-logout</v-icon>
