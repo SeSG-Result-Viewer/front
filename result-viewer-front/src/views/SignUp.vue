@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <v-card class="ma-auto mt-5" width="500" shaped outlined raised>
+    <v-card
+      class="ma-auto mt-5"
+      width="500"
+      shaped
+      outlined
+      raised
+      :loading="loading"
+    >
       <v-card-title>
         <h2 class="ma-auto">Make your registration</h2>
       </v-card-title>
@@ -12,6 +19,7 @@
               :rules="nameRules"
               label="Name"
               placeholder="Nome Sobrenome"
+              :disabled="disabled"
             ></v-text-field>
           </v-row>
 
@@ -21,6 +29,7 @@
               :rules="emailRules"
               label="E-mail"
               placeholder="nome@email.com"
+              :disabled="disabled"
             ></v-text-field>
           </v-row>
 
@@ -33,6 +42,7 @@
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="show = !show"
               placeholder="123#4#6F"
+              :disabled="disabled"
             ></v-text-field>
           </v-row>
 
@@ -45,12 +55,13 @@
               :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="show = !show"
               placeholder="123#4#6F"
+              :disabled="disabled"
             ></v-text-field>
           </v-row>
 
           <v-row justify="center" class="mt-5">
             <v-alert type="error" v-model="alertError" dismissible>
-              Passwords don't match!
+              {{ errorMessage }}
             </v-alert>
           </v-row>
 
@@ -91,7 +102,10 @@ export default {
 
   data: () => ({
     alertError: false,
+    errorMessage: "",
     show: false,
+    loading: false,
+    disabled: false,
     name: "",
     nameRules: [
       (v) => !!v || "Name is required!",
@@ -123,16 +137,35 @@ export default {
       }
       if (this.password !== this.confirmPassword) {
         this.alertError = true;
+        this.errorMessage = "Passwords don't match!";
       } else if (validation) {
         this.alertError = false;
+        this.loading = true;
+        this.disabled = true;
         this.signUp();
       }
     },
 
-    signUp() {
-      sendSignUpData(this.name, this.email, this.password).then(() => {
+    async signUp() {
+      const request = await sendSignUpData(
+        this.name,
+        this.email,
+        this.password
+      );
+
+      if (request === "E-mail already registered!") {
+        this.alertError = true;
+        this.errorMessage = "E-mail already registered!";
+        this.loading = false;
+        this.disabled = false;
+      } else if (request === "The user email format is invalid!") {
+        this.alertError = true;
+        this.errorMessage = "The user email format is invalid!";
+        this.loading = false;
+        this.disabled = false;
+      } else {
         router.push("/signin");
-      });
+      }
     },
 
     reset() {

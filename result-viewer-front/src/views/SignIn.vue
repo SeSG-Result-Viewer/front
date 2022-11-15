@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <v-card class="ma-auto mt-5" width="500" shaped outlined raised>
+    <v-card
+      class="ma-auto mt-5"
+      width="500"
+      shaped
+      outlined
+      raised
+      :loading="loading"
+    >
       <v-card-title>
         <h2 class="ma-auto">Make your login</h2>
       </v-card-title>
@@ -13,6 +20,7 @@
               label="E-mail"
               placeholder="nome@email.com"
               required
+              :disabled="disabled"
             ></v-text-field>
           </v-row>
 
@@ -26,7 +34,14 @@
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showPassword = !showPassword"
               required
+              :disabled="disabled"
             ></v-text-field>
+          </v-row>
+
+          <v-row justify="center" class="mt-5">
+            <v-alert type="error" v-model="alertError" dismissible>
+              {{ errorMessage }}
+            </v-alert>
           </v-row>
 
           <v-row justify="center">
@@ -37,12 +52,6 @@
             <v-btn color="indigo" text dark to="/signup">
               Don't have an account? Click here.
             </v-btn>
-          </v-row>
-
-          <v-row justify="center" class="mt-5">
-            <v-alert type="error" v-model="alertError" dismissible>
-              {{ this.errorMessage }}
-            </v-alert>
           </v-row>
         </v-form>
       </v-card-text>
@@ -64,10 +73,13 @@ export default {
       }
     });
   },
+
   data() {
     return {
       alertError: false,
       errorMessage: "",
+      loading: false,
+      disabled: false,
       email: "",
       emailRules: [
         (v) => !!v || "E-mail is required",
@@ -88,20 +100,21 @@ export default {
   methods: {
     async authenticate() {
       if (this.$refs.form.validate()) {
-        // ESTA COM ERRO NO THIS.ALERT E THIS.ERRORMESSAGE -- AINDA TO ARRUMANDO
-        this.alertError = true;
-        this.errorMessage = "Invalid";
-
+        this.loading = true;
+        this.disabled = true;
         const request = await signIn(this.email, this.password);
 
-        if (request === 400) {
-          this.alertError = true;
-          this.errorMessage = "Invalid";
-          console.log(request);
-          alert("Invalid e-mail or password");
+        if (request.access_token) {
+          this.$store.commit("update_user_name", request.name);
+          this.loading = false;
+          this.disabled = false;
+          router.push("/");
         }
 
-        router.push("/");
+        this.alertError = true;
+        this.errorMessage = request;
+        this.loading = false;
+        this.disabled = false;
       }
     },
   },

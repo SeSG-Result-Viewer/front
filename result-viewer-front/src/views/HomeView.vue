@@ -12,25 +12,24 @@
           <v-card min-width="300">
             <v-card-title>Informative</v-card-title>
             <v-card-text>
-              <h3>1 - Insert your files returned from Sesg.</h3>
-              <br />
               <h3>
-                2 - GS-Size is basically how many articles the review has.
+                1 - On upload, insert your files returned from Sesg. "GS-Size"
+                is how many articles the review has.
               </h3>
               <br />
               <h3>
-                3 - Calculate Metrics returns additional columns informing the
-                score of each string (table row).
+                2 - When calculating metrics, new columns are added containing
+                the score of each string (table row).
               </h3>
               <br />
               <h3>
-                4 - You can export the table after performing the metrics
-                calculation.
+                3 - You can export the table (or only the selected rows) after
+                calculating the metrics, with the scores included.
               </h3>
               <br />
               <h3>
-                5 - You have access to your upload history in the sidebar onthe
-                side.
+                4 - (Not implemented!) You have access to your upload history in
+                the sidebar onthe side.
               </h3>
               <br />
               <!-- <v-virtual-scroll

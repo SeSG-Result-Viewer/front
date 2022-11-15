@@ -4,13 +4,12 @@ import { sendLoginData } from "./FunctionsBack";
 export async function signIn(email, password) {
    const request = await sendLoginData(email, password)
 
-   if (request.detail) {
-      return 400
+   if (request.access_token) {
+      localStorage.setItem('access_token', request.access_token);
+      return request;
    }
 
-   const { access_token } = request;
-   localStorage.setItem('access_token', access_token);
-   return request;
+   return request
 }
 
 export async function signOut() {

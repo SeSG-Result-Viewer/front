@@ -17,7 +17,7 @@
         </v-btn>
       </v-list-item>
 
-      <v-list-item link to="/">
+      <!-- <v-list-item link to="/">
         <v-list-item-icon>
           <v-icon color="white">mdi-home</v-icon>
         </v-list-item-icon>
@@ -36,7 +36,7 @@
           <v-icon color="white">mdi-account</v-icon>
         </v-list-item-icon>
         <v-list-item-title class="title">Sign Up</v-list-item-title>
-      </v-list-item>
+      </v-list-item> -->
 
       <!-- <v-list-group color="white">
         <template v-slot:activator>

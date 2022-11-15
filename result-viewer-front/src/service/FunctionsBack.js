@@ -18,6 +18,9 @@ export async function sendSignUpData(email, name, password) {
       }
    );
    const data = await res.json();
+   if (data.detail) {
+      return data.detail
+   }
    return data;
 }
 
@@ -39,6 +42,9 @@ export async function sendLoginData(email, password) {
       }
    );
    const data = await res.json();
+   if (data.detail) {
+      return data.detail
+   }
    return data;
 }
 
@@ -96,4 +102,3 @@ export async function getMetrics(json, gs_size) {
 
 
    // FUNÇÃO PARA RETORNAR O HISTÓRICO DO USUÁRIO
-
