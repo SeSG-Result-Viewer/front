@@ -47,10 +47,47 @@
         hover
         hide-default-footer
         multi-sort
+        show-expand
         :loading="loading"
         :page.sync="page"
         @page-count="pageCount = $event"
       >
+        <!-- <template v-slot:[`header.graph_id`]="{ header }">
+          {{ header.text }}
+          <v-menu offset-y :close-on-content-click="false">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon small :color="dessertName ? 'primary' : ''">
+                  mdi-filter
+                </v-icon>
+              </v-btn>
+            </template>
+
+            <div style="background-color: white; width: 280px">
+              <v-text-field
+                v-model="dessertName"
+                class="pa-4"
+                type="text"
+                label="Enter the search term"
+                :autofocus="true"
+              ></v-text-field>
+              <v-btn
+                @click="dessertName = ''"
+                small
+                text
+                color="primary"
+                class="ml-2 mb-2"
+                >Clean</v-btn
+              >
+            </div>
+          </v-menu>
+        </template> -->
+
+        <!-- EXPANDED ROW -->
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">More info about {{ item.graph_id }}</td>
+        </template>
+        <!-- EXPANDED ROW -->
       </v-data-table>
 
       <v-divider> </v-divider>
@@ -68,7 +105,8 @@
 
 <script>
 import EventBus from "../utils/bus";
-import ServicesBack from "../service/FunctionsBack.js";
+// import { getMetrics, saveData } from "../service/FunctionsBack.js";
+import { getMetrics } from "../service/FunctionsBack.js";
 import ServicesFront from "../service/FunctionsFront.js";
 
 export default {
@@ -91,10 +129,8 @@ export default {
     };
   },
 
-  servicesBack: null,
   servicesFront: null,
   created() {
-    this.servicesBack = new ServicesBack();
     this.servicesFront = new ServicesFront();
   },
 
@@ -120,8 +156,7 @@ export default {
 
     returnMetrics() {
       this.loading = true;
-      this.servicesBack
-        .getMetrics(this.json, this.$store.state.gs_size)
+      getMetrics(this.json, this.$store.state.gs_size)
         .then((data) => {
           const csv_metrics = this.servicesFront.getDataCSV(data);
           this.$store.commit("update_csv_metrics", csv_metrics);
@@ -142,14 +177,14 @@ export default {
       );
       this.headers = this.servicesFront.getHeaders(json.meta.fields);
       this.items = json.data;
-      this.servicesBack.saveData(
-        "2",
-        this.$store.state.upload_name,
-        this.$store.state.archive_csv_name,
-        this.$store.state.archive_csv_metrics,
-        this.$store.state.archive_txt_name,
-        this.$store.state.archive_txt
-      );
+      // this.servicesBack.saveData(
+      //   "2",
+      //   this.$store.state.upload_name,
+      //   this.$store.state.archive_csv_name,
+      //   this.$store.state.archive_csv_metrics,
+      //   this.$store.state.archive_txt_name,
+      //   this.$store.state.archive_txt
+      // );
     },
 
     exportMetricsFile() {

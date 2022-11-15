@@ -1,8 +1,9 @@
 <template>
   <v-container>
-    <SideBar :items="items"></SideBar>
+    <!-- <SideBar :items="items"></SideBar> PARA O USO DO HISTÓRICO-->
+    <SideBar />
     <v-col>
-      <v-row class="ma-auto">
+      <v-row class="mx-auto">
         <v-col>
           <UploadFile />
         </v-col>
@@ -11,24 +12,36 @@
           <v-card min-width="300">
             <v-card-title>Informative</v-card-title>
             <v-card-text>
-              <h3>1st - Insert your files returned from Sesg.</h3>
-              <br />
-              <h3>2nd - GS-Size is the number of articles in the review.</h3>
+              <h3>1 - Insert your files returned from Sesg.</h3>
               <br />
               <h3>
-                3nd - Calculate Metrics returns additional columns informing the
+                2 - GS-Size is basically how many articles the review has.
+              </h3>
+              <br />
+              <h3>
+                3 - Calculate Metrics returns additional columns informing the
                 score of each string (table row).
               </h3>
               <br />
               <h3>
-                4rd - You can export the table after performing the metrics
+                4 - You can export the table after performing the metrics
                 calculation.
               </h3>
               <br />
               <h3>
-                5rd - You have access to your upload history in the sidebar on
-                the side.
+                5 - You have access to your upload history in the sidebar onthe
+                side.
               </h3>
+              <br />
+              <!-- <v-virtual-scroll
+                :items="informatives"
+                :item-height="50"
+                height="250"
+              >
+                <template v-slot:default="{ item }">
+                  <h3>{{ item.text }}</h3>
+                </template>
+              </v-virtual-scroll> -->
             </v-card-text>
           </v-card>
         </v-col>
@@ -45,6 +58,8 @@
 import UploadFile from "@/components/UploadFile.vue";
 import DataTable from "@/components/DataTable.vue";
 import SideBar from "@/components/SideBar.vue";
+import { isSignedIn } from "@/service/Authenticate";
+import router from "@/router";
 
 export default {
   name: "HomeView",
@@ -55,26 +70,33 @@ export default {
     SideBar,
   },
 
-  data() {
-    return {
-      // RETORNAR OS ITEMS DO BANCO
-      items: [
-        {
-          text: "teste1-results",
-        },
-        {
-          text: "teste2-results",
-        },
-        {
-          text: "teste3-results",
-        },
-        {
-          text: "teste4-results",
-        },
-      ],
-    };
+  // data() {
+  //   return {
+  //     RETORNAR OS ITEMS DO BANCO
+  //     items: [
+  //       { text: "azeem-results" },
+  //       { text: "teste-results" },
+  //       { text: "Teste 3" },
+  //       { text: "Teste 4" },
+  //     ],
+  //   };
+  // },
+
+  mounted() {
+    isSignedIn().then((token) => {
+      if (!token) {
+        router.push("/signin");
+      }
+    });
+
+    // RETORNAR A LISTA DOS ITEMS DO BANCO E MANDAR PRA SIDEBAR
   },
 };
 </script>
 
-<style></style>
+<style>
+.v-card {
+  display: flex !important;
+  flex-direction: column;
+}
+</style>

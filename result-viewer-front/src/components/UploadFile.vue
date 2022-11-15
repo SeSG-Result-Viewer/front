@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" lazy-validation>
+  <v-form ref="form" lazy-validation @submit.prevent="processFiles()">
     <v-col>
       <v-row justify="center" class="mb-2">
         <h1>Upload your files</h1>
@@ -42,7 +42,7 @@
         </v-text-field>
       </v-row>
 
-      <v-row justify="center">
+      <!-- <v-row justify="center">
         <v-text-field
           class="fieldName"
           type="text"
@@ -52,7 +52,7 @@
           :rules="rulesUploadName"
           v-model="uploadName"
         />
-      </v-row>
+      </v-row> -->
 
       <v-alert type="info" v-model="alertInfo" dismissible class="mt-2">
         Files must contain -result (.csv) and -string (.txt) in the names.
@@ -62,7 +62,7 @@
       </v-alert>
 
       <v-row justify="center" class="ma-auto mt-2">
-        <v-btn class="" color="indigo" dark @click="processFiles"
+        <v-btn class="" color="indigo" dark type="submit"
           >PROCESS FILES
           <v-icon dark right>mdi-cloud-upload</v-icon>
         </v-btn>
@@ -73,7 +73,6 @@
 
 <script>
 import EventBus from "../utils/bus";
-import ServicesBack from "../service/FunctionsBack.js";
 
 export default {
   name: "UploadFile",
@@ -85,7 +84,7 @@ export default {
       fileTXT: null,
       txtSize: "",
       gsSize: "",
-      uploadName: null,
+      // uploadName: null,
       alertInfo: false,
       alertError: false,
       rules: [
@@ -93,7 +92,7 @@ export default {
         (f) => (f && f.size > 0) || "File is required",
       ],
       rulesGS: [(f) => !!f || "GS Size is required"],
-      rulesUploadName: [(f) => !!f || "Upload name is required"],
+      // rulesUploadName: [(f) => !!f || "Upload name is required"],
     };
   },
 
@@ -135,16 +134,11 @@ export default {
       }
     },
 
-    uploadName(n) {
-      if (n) {
-        this.$store.commit("update_upload_name", n);
-      }
-    },
-  },
-
-  servicesBack: null,
-  created() {
-    this.servicesBack = new ServicesBack();
+    // uploadName(n) {
+    //   if (n) {
+    //     this.$store.commit("update_upload_name", n);
+    //   }
+    // },
   },
 
   methods: {

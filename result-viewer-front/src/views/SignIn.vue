@@ -5,12 +5,13 @@
         <h2 class="ma-auto">Make your login</h2>
       </v-card-title>
       <v-card-text>
-        <v-form ref="form" lazy-validation>
+        <v-form ref="form" lazy-validation @submit.prevent="authenticate()">
           <v-row justify="center">
             <v-text-field
               v-model="email"
               :rules="emailRules"
               label="E-mail"
+              placeholder="nome@email.com"
               required
             ></v-text-field>
           </v-row>
@@ -21,6 +22,7 @@
               :type="showPassword ? 'text' : 'password'"
               :rules="passwordRules"
               label="Password"
+              placeholder="123#4#6F"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showPassword = !showPassword"
               required
@@ -28,13 +30,19 @@
           </v-row>
 
           <v-row justify="center">
-            <v-btn color="indigo" dark @click="login"> SIGN IN </v-btn>
+            <v-btn color="indigo" type="submit" dark> SIGN IN </v-btn>
           </v-row>
 
           <v-row justify="center" class="mt-5">
             <v-btn color="indigo" text dark to="/signup">
               Don't have an account? Click here.
             </v-btn>
+          </v-row>
+
+          <v-row justify="center" class="mt-5">
+            <v-alert type="error" v-model="alertError" dismissible>
+              {{ this.errorMessage }}
+            </v-alert>
           </v-row>
         </v-form>
       </v-card-text>
@@ -43,40 +51,57 @@
 </template>
 
 <script>
-import ServicesBack from "../service/FunctionsBack.js";
-import ServicesFront from "../service/FunctionsFront.js";
+import router from "@/router/index.js";
+import { signIn, isSignedIn } from "../service/Authenticate.js";
 
 export default {
   name: "SignIn",
 
-  servicesBack: null,
-  servicesFront: null,
-  created() {
-    this.servicesBack = new ServicesBack();
-    this.servicesFront = new ServicesFront();
+  mounted() {
+    isSignedIn().then((token) => {
+      if (token) {
+        router.push("/");
+      }
+    });
+  },
+  data() {
+    return {
+      alertError: false,
+      errorMessage: "",
+      email: "",
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /...+@..+\...+/.test(v) || "E-mail must be valid!",
+        (v) => !/[ ]/.test(v) || "No spaces allowed!",
+      ],
+      showPassword: false,
+      password: "",
+      passwordRules: [
+        (v) => !!v || "Password is required!",
+        (v) =>
+          (v && v.length >= 8) || "Password must be less than 8 characters!",
+        (v) => !/[ ]/.test(v) || "No spaces allowed!",
+      ],
+    };
   },
 
-  data: () => ({
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
-    showPassword: false,
-    password: "",
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      (v) =>
-        (v && v.length >= 8) ||
-        "The password must be at least 8 characters long",
-    ],
-  }),
-
   methods: {
-    login() {
+    async authenticate() {
       if (this.$refs.form.validate()) {
-        this.servicesBack.sendLoginData(this.email, this.password);
-        // router.push("/signin");
+        // ESTA COM ERRO NO THIS.ALERT E THIS.ERRORMESSAGE -- AINDA TO ARRUMANDO
+        this.alertError = true;
+        this.errorMessage = "Invalid";
+
+        const request = await signIn(this.email, this.password);
+
+        if (request === 400) {
+          this.alertError = true;
+          this.errorMessage = "Invalid";
+          console.log(request);
+          alert("Invalid e-mail or password");
+        }
+
+        router.push("/");
       }
     },
   },
