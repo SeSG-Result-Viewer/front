@@ -47,7 +47,6 @@
         hover
         hide-default-footer
         multi-sort
-        show-expand
         :loading="loading"
         :page.sync="page"
         @page-count="pageCount = $event"
