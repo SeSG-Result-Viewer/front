@@ -13,7 +13,6 @@ export default new Vuex.Store({
     archive_txt: "",
     gs_size: "",
     // upload_name: "",
-    user_name: "",
   },
 
   mutations: {
@@ -51,9 +50,5 @@ export default new Vuex.Store({
     //   state.upload_name = upload_name;
     //   // console.log(this.state.upload_name)
     // },
-
-    update_user_name(state, user_name) {
-      state.user_name = user_name;
-    }
   },
 })

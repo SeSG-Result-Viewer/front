@@ -105,7 +105,6 @@ export default {
         const request = await signIn(this.email, this.password);
 
         if (request.access_token) {
-          this.$store.commit("update_user_name", request.name);
           this.loading = false;
           this.disabled = false;
           router.push("/");

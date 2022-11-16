@@ -1,4 +1,5 @@
 const base_url = "http://127.0.0.1:8000/";
+const token = localStorage.getItem('token');
 
 export async function sendSignUpData(email, name, password) {
    const body = {
@@ -25,7 +26,6 @@ export async function sendSignUpData(email, name, password) {
 }
 
 export async function sendLoginData(email, password) {
-   const token = localStorage.getItem('token');
    const body = {
       "email": email,
       "password": password,

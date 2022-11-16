@@ -38,14 +38,23 @@
         <v-list-item-title class="title">Sign Up</v-list-item-title>
       </v-list-item> -->
 
-      <!-- <v-list-group color="white">
+      <v-list-group color="white">
         <template v-slot:activator>
           <v-list-item-icon>
             <v-icon color="white">mdi-history</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="title">History</v-list-item-title>
         </template>
-        <v-list-item
+        <v-list-item>
+          <v-list-item-icon class="mb-8">
+            <v-icon color="white">mdi-alert</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>
+            <p class="mb-0">(US-14)</p>
+            <p>In implementation...</p>
+          </v-list-item-title>
+        </v-list-item>
+        <!-- <v-list-item
           v-for="item in items"
           :key="item.text"
           @click="showDataTable(item.text)"
@@ -54,18 +63,19 @@
             <v-icon color="white">mdi-file</v-icon>
           </v-list-item-icon>
           <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item>
-      </v-list-group> -->
+        </v-list-item> -->
+      </v-list-group>
     </v-list>
 
     <template v-slot:append>
-      <v-list-item class="mt-5">
+      <v-list-item>
         <v-list-item-icon>
           <v-icon color="white">mdi-account-circle</v-icon>
         </v-list-item-icon>
         <v-list-item-title class="title">{{ userName }}</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="logout()" class="mt-5">
+
+      <v-list-item @click="logout()">
         <v-list-item-icon>
           <v-icon color="white">mdi-logout</v-icon>
         </v-list-item-icon>
@@ -92,8 +102,7 @@ export default {
   },
 
   mounted() {
-    this.userName = this.$store.state.user_name;
-    // TA BUGADO, QUANDO DA F5 PERDE O NOME
+    this.userName = localStorage.getItem("user_name");
   },
 
   methods: {
@@ -115,6 +124,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

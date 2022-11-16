@@ -5,7 +5,8 @@ export async function signIn(email, password) {
    const request = await sendLoginData(email, password)
 
    if (request.access_token) {
-      localStorage.setItem('access_token', request.access_token);
+      localStorage.setItem("access_token", request.access_token);
+      localStorage.setItem("user_name", request.name)
       return request;
    }
 
@@ -14,6 +15,8 @@ export async function signIn(email, password) {
 
 export async function signOut() {
    localStorage.removeItem("access_token");
+   localStorage.removeItem("name");
+
 }
 
 export async function isSignedIn() {
