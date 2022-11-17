@@ -1,12 +1,5 @@
 # result-viewer-front
 
-## Project setup
-
-
-### Compiles and hot-reloads for development
-
-
-
 1 → Baixe o arquivo .zip e faça a extração.
 
 2 → No CMD, vá até o diretório da pasta extraída (“front-main/result-viewer-front”).
