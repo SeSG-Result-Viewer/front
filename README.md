@@ -12,7 +12,7 @@ cd diretório/front-main/result-viewer-front
 npm install
 ```
 
-4 → Após a finalização do passo 3, execute no CMD
+4 → Após a finalização do passo 3, execute no CMD/PowerShell
 ```
 npm run serve
 ```
