@@ -1,24 +1,23 @@
 # result-viewer-front
 
-## Project setup
+1 → Baixe o arquivo .zip e faça a extração.
+
+2 → No CMD/PowerShell, vá até o diretório da pasta extraída (“front-main/result-viewer-front”).
+```
+cd diretório/front-main/result-viewer-front
+```
+
+3 → Execute no CMD/PowerShell
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+4 → Após a finalização do passo 3, execute no CMD/PowerShell
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+5 → Ao finalizar será mostrado dois links, ABRA O:
 ```
-npm run build
+http://localhost:8080
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
