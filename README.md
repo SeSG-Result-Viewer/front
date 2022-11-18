@@ -3,6 +3,8 @@
 ## Pré-requisito
 Para o Front-End, faça a instalação do NodeJS → https://nodejs.org/pt-br/download/
 
+[Tutorial de instalação Node](https://dicasdejavascript.com.br/instalacao-do-nodejs-e-npm-no-windows-passo-a-passo/)
+
 ## Link do vídeo tutorial
 Result Viewer - Tutorial de Instalação → https://youtu.be/fBel1af6v9c
 
