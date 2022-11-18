@@ -1,10 +1,10 @@
 # Result Viewer (Front-End)
 
-## Pré-requisitos
+## Pré-requisito
 Para o Front-End, faça a instalação do NodeJS → https://nodejs.org/pt-br/download/
 
 ## Link do vídeo tutorial
-https://youtu.be/fBel1af6v9c
+Result Viewer - Tutorial de Instalação → https://youtu.be/fBel1af6v9c
 
 ## Passo a passo de instalação
 1 → Baixe o arquivo .zip e faça a extração.
